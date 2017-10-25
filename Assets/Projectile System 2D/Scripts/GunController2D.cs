@@ -16,4 +16,14 @@ public class GunController2D : MonoBehaviour {
         transform.rotation = Quaternion.Euler(0f, 0f, rotZ + rotationOffset);
 
 	}
+
+    public void setOffset(int rot)
+    {
+        rotationOffset = rot;
+    }
+
+    public int getOffset()
+    {
+        return rotationOffset;
+    }
 }
