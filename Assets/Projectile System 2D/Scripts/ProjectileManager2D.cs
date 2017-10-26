@@ -4,17 +4,23 @@ using UnityEngine;
 
 public class ProjectileManager2D : MonoBehaviour {
 
-    float rot;
-    public float fireRate = 0;
-    public float damage = 10;
-    public LayerMask whatToHit;
+    [SerializeField]
+    float fireRate = 0;
+    [SerializeField]
+    float damage = 10;
+    [SerializeField]
+    LayerMask whatToHit;
+    [SerializeField]
+    Transform bulletPrefab;
 
-    public Transform bulletPrefab;
+    private float rot;
     private float timeToFire = 0;
     private Transform firePoint;
 
-	// Use this for initialization
-	void Awake () {
+    float getRot() { return rot; }
+
+    // Use this for initialization
+    void Awake () {
         firePoint = transform.Find("FirePoint");
         if (firePoint == null)
         {
@@ -24,12 +30,12 @@ public class ProjectileManager2D : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        setRotation();
+        //setRotation();
         if (fireRate == 0)
         {
             if (Input.GetButtonDown("Fire1"))
             {
-                ShootShotgun();
+                ShootMulti();
             }
         }
         else
@@ -37,33 +43,34 @@ public class ProjectileManager2D : MonoBehaviour {
             if (Input.GetButton ("Fire1") && Time.time > timeToFire)
             {
                 timeToFire = Time.time + 1 / fireRate;
-                Shoot();
+                ShootOne();
             }
         }
 	}
 
-    void Shoot()
+    void ShootOne()
     {
-        //setRotation();
-
-        Effect();
-    }
-
-    void ShootShotgun()
-    {
-        //setRotation();
+        setRotation();
 
         firePoint.rotation = Quaternion.Euler(0.0f, 0.0f, rot);
-        Effect();
-
-        firePoint.rotation = Quaternion.Euler(0.0f, 0.0f, rot + 4);
-        Effect();
-
-        firePoint.rotation = Quaternion.Euler(0.0f, 0.0f, rot - 4);
-        Effect();
+        SpawnBullet();
     }
 
-    void Effect()
+    void ShootMulti()
+    {
+        setRotation();
+
+        firePoint.rotation = Quaternion.Euler(0.0f, 0.0f, rot);
+        SpawnBullet();
+
+        firePoint.rotation = Quaternion.Euler(0.0f, 0.0f, rot + 4);
+        SpawnBullet();
+
+        firePoint.rotation = Quaternion.Euler(0.0f, 0.0f, rot - 4);
+        SpawnBullet();
+    }
+
+    void SpawnBullet()
     {
         Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
     }
